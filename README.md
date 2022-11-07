@@ -74,7 +74,42 @@ service isc-dhcp-server start
 > dan Ostania sebagai DHCP Relay
 
 ### Penyelesaian
+Kita dapat melakukan penginstallan di node Ostania yang dilakukan langsung di file `/root/.bashrc` dengan format sebagai berikut:
 
+```shell
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.8.0.0/16
+cat /etc/resolv.conf
+apt-get update
+echo "" | apt-get install isc-dhcp-relay -y
+```
+
+Setelah itu, lakukan konfigurasi pada node Ostania pada file `/etc/default/isc-dhcp-relay` yang kita buat konfigurasinya pada file temporary yaitu `isc-dchp-relay-2` yang berisi:
+
+```shell
+# Defaults for isc-dhcp-relay initscript
+# sourced by /etc/init.d/isc-dhcp-relay
+# installed at /etc/default/isc-dhcp-relay by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# What servers should the DHCP relay forward requests to?
+SERVERS="10.8.2.4"
+
+# On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
+INTERFACES="eth1 eth2 eth3"
+
+# Additional options that are passed to the DHCP relay daemon?
+OPTIONS=""
+```
+
+Lalu, kita jalankan script `soal2.sh` pada node Westalis yang berisi:
+
+```shell
+cp /root/isc-dhcp-relay-2 /etc/default/isc-dhcp-relay
+service isc-dhcp-relay start
+```
 
 > Loid dan Franky menyusun peta tersebut dengan hati-hati dan teliti. Ada beberapa kriteria yang ingin dibuat oleh Loid dan Franky, yaitu:
 
