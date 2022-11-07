@@ -18,7 +18,57 @@ IP Prefix Kelompok: `10.8`
 > Loid bersama Franky berencana membuat peta tersebut dengan kriteria WISE sebagai DNS Server, Westalis sebagai DHCP Server, Berlint sebagai Proxy Server
 
 ### Penyelesaian
+Kita dapat melakukan penginstallan masing-masing kebutuhan node yang dilakukan langsung di file `/root/.bashrc` dengan format sebagai berikut:
 
+```shell
+# WISE
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+apt-get update
+apt-get install bind9 -y
+
+# Westalis
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+apt-get update
+apt-get install isc-dhcp-server -y
+
+# Berlint
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+apt-get update
+apt-get install squid -y
+```
+
+Selain, itu untuk menjadikan Westalis sebagai DHCP Server, kita perlu menambahkan konfigurasi pada node Westalis pada file `/etc/default/isc-dhcp-server` yang kita buat konfigurasinya pada file temporary yaitu `isc-dchp-server-1` dengan ditambahkan `INTERFACES="eth0"`
+
+```shell
+# Defaults for isc-dhcp-server initscript
+# sourced by /etc/init.d/isc-dhcp-server
+# installed at /etc/default/isc-dhcp-server by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# Path to dhcpd's config file (default: /etc/dhcp/dhcpd.conf).
+#DHCPD_CONF=/etc/dhcp/dhcpd.conf
+
+# Path to dhcpd's PID file (default: /var/run/dhcpd.pid).
+#DHCPD_PID=/var/run/dhcpd.pid
+
+# Additional options to start dhcpd with.
+#       Don't use options -cf or -pf here; use DHCPD_CONF/ DHCPD_PID instead
+#OPTIONS=""
+
+# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. "eth0 eth1".
+INTERFACES="eth0"
+```
+
+Setelah itu, kita jalankan script `soal1.sh` pada node Westalis yang berisi:
+
+```shell
+cp /root/isc-dhcp-server-1 /etc/default/isc-dhcp-server
+service isc-dhcp-server start
+```
 
 ### 2
 > dan Ostania sebagai DHCP Relay
