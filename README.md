@@ -151,7 +151,7 @@ subnet 10.8.1.0 netmask 255.255.255.0 {
 
 subnet 10.8.3.0 netmask 255.255.255.0 {
     range 10.8.3.10 10.8.3.30;
-    range 10.8.1.60 10.8.1.85;
+    range 10.8.3.60 10.8.3.85;
     option routers 10.8.3.1;
     option broadcast-address 10.8.3.255;
     option domain-name-servers 10.8.2.2;
@@ -305,7 +305,7 @@ subnet 10.8.1.0 netmask 255.255.255.0 {
 
 subnet 10.8.3.0 netmask 255.255.255.0 {
     range 10.8.3.10 10.8.3.30;
-    range 10.8.1.60 10.8.1.85;
+    range 10.8.3.60 10.8.3.85;
     ...
 }
 
