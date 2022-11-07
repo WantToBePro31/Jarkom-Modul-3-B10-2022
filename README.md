@@ -70,6 +70,8 @@ cp /root/isc-dhcp-server-1 /etc/default/isc-dhcp-server
 service isc-dhcp-server start
 ```
 
+Hal ini membuat masing-masing node memiliki server tersendiri.
+
 ### 2
 > dan Ostania sebagai DHCP Relay
 
@@ -104,12 +106,14 @@ INTERFACES="eth1 eth2 eth3"
 OPTIONS=""
 ```
 
-Lalu, kita jalankan script `soal2.sh` pada node Westalis yang berisi:
+Lalu, kita jalankan script `soal2.sh` pada node Ostania yang berisi:
 
 ```shell
 cp /root/isc-dhcp-relay-2 /etc/default/isc-dhcp-relay
 service isc-dhcp-relay start
 ```
+
+Hal ini membuat node Ostania menjadi DHCP relay yang Servernya mengarah ke Westalis serta Interfacenya mengarah ke eth1, eth2, dan eth3 yang merupakan switch 1, 2, dan 3.
 
 > Loid dan Franky menyusun peta tersebut dengan hati-hati dan teliti. Ada beberapa kriteria yang ingin dibuat oleh Loid dan Franky, yaitu:
 
