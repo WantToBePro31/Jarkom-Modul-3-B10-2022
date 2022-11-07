@@ -580,4 +580,4 @@ service isc-dhcp-server restart
 
 Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0 berubah menjadi `10.8.3.13/24`
 
-![image](https://user-images.githubusercontent.com/67154280/200376905-1f8ad4e2-d4c5-44ea-a2b7-bb309a2254d5.png)
+![image](https://user-images.githubusercontent.com/67154280/200377235-889a77bd-8053-4d79-afa1-b0db828351e5.png)
