@@ -320,7 +320,7 @@ Hal ini akan membuat Client yang melalui Switch3 memiliki range IP yang sudah di
 > Client mendapatkan DNS dari WISE dan client dapat terhubung dengan internet melalui DNS tersebut
 
 ### Penyelesaian
-Kita harus melakukan konfigurasi terhadap subnet yang dilalui Switch1 dan Switch3 dengan melakukan penetapan range IP sebagai berikut
+Kita harus melakukan konfigurasi terhadap subnet yang dilalui Switch1 dan Switch3 dengan melakukan penetapan IP DNS Server yang terhubung sebagai berikut
 
 ```shell
 subnet 10.8.1.0 netmask 255.255.255.0 {
@@ -370,13 +370,33 @@ options {
         listen-on-v6 { any; };
 ```
 
-Hal ini akan membuat Client yang melalui Switch3 memiliki range IP yang sudah ditetapkan.
+Hal ini akan membuat Client mendapatkan DNS dari WISE dan terhubung dengan internet melalui DNS.
 
 ### 6
 > Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui Switch1 selama 5 menit sedangkan pada client yang melalui Switch3 selama 10 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 115 menit
 
 ### Penyelesaian
+Kita harus melakukan konfigurasi terhadap subnet yang dilalui Switch1 dan Switch3 dengan melakukan penetapan lama waktu dan waktu maksimal untuk peminjaman alamat IP kepada Client oleh DHCP Server sebagai berikut
 
+```shell
+subnet 10.8.1.0 netmask 255.255.255.0 {
+    ...
+    default-lease-time 300;
+    max-lease-time 6900;
+}
+
+subnet 10.8.3.0 netmask 255.255.255.0 {
+    ...
+    default-lease-time 600;
+    max-lease-time 6900;
+}
+
+subnet 10.8.2.0 netmask 255.255.255.0 {
+    ...
+}
+```
+
+Hal ini akan membuat lama waktu untuk peminjaman alamat IP kepada Client oleh DHCP Server melalui Switch1 selama 5menit (300detik) dan melalui Switch3 selama 10menit (600detik), serta waktu maksimal peminjamannya selama 115menit (6900detik).
 
 ### 7
 > Loid dan Franky berencana menjadikan Eden sebagai server untuk pertukaran informasi dengan alamat IP yang tetap dengan IP [prefix IP].3.13
