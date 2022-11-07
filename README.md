@@ -67,7 +67,7 @@ Setelah itu, kita jalankan script `soal1.sh` pada node Westalis yang berisi:
 
 ```shell
 cp /root/isc-dhcp-server-1 /etc/default/isc-dhcp-server
-service isc-dhcp-server start
+service isc-dhcp-server restart
 ```
 
 Hal ini membuat masing-masing node memiliki server tersendiri.
@@ -110,7 +110,7 @@ Lalu, kita jalankan script `soal2.sh` pada node Ostania yang berisi:
 
 ```shell
 cp /root/isc-dhcp-relay-2 /etc/default/isc-dhcp-relay
-service isc-dhcp-relay start
+service isc-dhcp-relay restart
 ```
 
 Hal ini membuat node Ostania menjadi DHCP relay yang Servernya mengarah ke Westalis serta Interfacenya mengarah ke eth1, eth2, dan eth3 yang merupakan switch 1, 2, dan 3.
@@ -272,7 +272,7 @@ Lalu, akan menjalankan script `soal3-6.sh` dengan isi sebagai berikut
 
 ```shell
 cp /root/dhcpd3-6.conf /etc/dhcp/dhcpd.conf
-service isc-dhcp-server start
+service isc-dhcp-server restart
 ```
 
 ### 3
@@ -575,5 +575,5 @@ Setelah itu, jalankan script `soal7.sh` dengan isi sebagai berikut
 
 ```shell
 cp /root/dhcpd7.conf /etc/dhcp/dhcpd.conf
-service isc-dhcp-server start
+service isc-dhcp-server restart
 ```
