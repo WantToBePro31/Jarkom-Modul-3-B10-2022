@@ -4,7 +4,6 @@
 | Name                      | NRP        | 
 | ------------------------- | ---------- |
 | Frederick Wijayadi Susilo | 5025201111 |
-| Doanda Dresta Rahma       | 5025201049 |
 | Zunia Aswaroh             | 5025201058 |
 
 IP Prefix Kelompok: `10.8`
