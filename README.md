@@ -37,7 +37,7 @@ apt-get update
 apt-get install squid -y
 ```
 
-Selain, itu untuk menjadikan Westalis sebagai DHCP Server, kita perlu menambahkan konfigurasi pada node Westalis pada file `/etc/default/isc-dhcp-server` yang kita buat konfigurasinya pada file temporary yaitu `isc-dchp-server-1` dengan ditambahkan `INTERFACES="eth0"`
+Selain, itu untuk menjadikan Westalis sebagai DHCP Server, kita perlu menambahkan konfigurasi pada node Westalis pada file `/etc/default/isc-dhcp-server` yang kita buat konfigurasinya pada file temporary yaitu `isc-dhcp-server-1` dengan ditambahkan `INTERFACES="eth0"`
 
 ```shell
 # Defaults for isc-dhcp-server initscript
@@ -85,7 +85,7 @@ apt-get update
 echo "" | apt-get install isc-dhcp-relay -y
 ```
 
-Setelah itu, lakukan konfigurasi pada node Ostania pada file `/etc/default/isc-dhcp-relay` yang kita buat konfigurasinya pada file temporary yaitu `isc-dchp-relay-2` yang berisi:
+Setelah itu, lakukan konfigurasi pada node Ostania pada file `/etc/default/isc-dhcp-relay` yang kita buat konfigurasinya pada file temporary yaitu `isc-dhcp-relay-2` yang berisi:
 
 ```shell
 # Defaults for isc-dhcp-relay initscript
