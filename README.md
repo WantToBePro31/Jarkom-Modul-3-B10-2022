@@ -601,7 +601,9 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
 ### Penyelesaian
 
 **Penambahan ACL Waktu**
-**Pada node Berlint** buat file `acl-1.conf` dan isikan potongan teks berikut:
+
+**Pada node Berlint**, buat file `acl-1.conf` dan isikan potongan teks berikut:
+
 - acl-1.conf
   
   ```shell
@@ -612,10 +614,12 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
     acl WORK_HOUR time MTWHF 08:00-17:00
   ```
   
-kemudian copy file `acl-1.conf` dengan perintah `cp /root/acl-1.conf /etc/squid/acl.conf` dan lakukan
+Kemudian copy file `acl-1.conf` dengan perintah `cp /root/acl-1.conf /etc/squid/acl.conf` dan lakukan
+
 **Konfigurasi Akses Berdasarkan ACL Waktu**
 
-buat file `squid8-9.conf` dan isikan potongan teks berikut:
+Buat file `squid8-9.conf` dan isikan potongan teks berikut:
+
 - squid8-9.conf
   
   ```shell
@@ -632,19 +636,20 @@ buat file `squid8-9.conf` dan isikan potongan teks berikut:
     http_access allow CAN_ACCESS_2
     http_access allow CAN_ACCESS_3
   ```
-pada syntax tersebut menjelaskan bahwa `http_access allow all` Memperbolehkan semuanya untuk mengakses proxy via http. Pengaturan ini perlu ditambahkan karena pengaturan default squid adalah deny.
+  
+Pada syntax tersebut menjelaskan bahwa `http_access allow` Memperbolehkan semuanya untuk mengakses proxy via http. Pengaturan ini perlu ditambahkan karena pengaturan default squid adalah deny.
 
-kemudian copy file `squid8-9.conf` dengan perintah `cp /root/squid8-9.conf /etc/squid/squid.conf` 
-setelah semua perintah dijalankan lakukan restart service squid dengan `service squid restart`
+Kemudian copy file `squid8-9.conf` dengan perintah `cp /root/squid8-9.conf /etc/squid/squid.conf`.
 
+Setelah semua perintah, dijalankan lakukan restart service squid dengan `service squid restart`.
 
-Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https://its.ac.id` akan menghasilkan seperti ini:
+Maka, ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https://its.ac.id` akan menghasilkan seperti ini:
 
-- Senin (10.00)
+- Senin (10.00) -> tidak dapat diakses
 
 ![image](https://user-images.githubusercontent.com/67154280/201596650-3accc237-a0a4-4dbc-bb78-0702e9518810.png)
 
-- Senin (20.00) dan Sabtu (10.00)
+- Senin (20.00) dan Sabtu (10.00) -> dapat diakses
 
 ![image](https://user-images.githubusercontent.com/67154280/201596969-0da0f06c-da91-4995-9eb7-86b2d9f2f5f5.png)
 
@@ -653,7 +658,7 @@ Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https:
 
 ### Penyelesaian
 
-**Pada Node Wise** buat file `named-8.conf.local` kemudian buat directory baru dengan perintah `mkdir /etc/bind/wise` dan buat file baru lagi pada directory wise dengan `loid-work-8.com` `franky-work-8.com` kemudian isikan syntax berikut :
+**Pada Node Wise**, buat isi file `named.conf.local` kemudian buat directory baru dengan perintah `mkdir /etc/bind/wise` dan buat file baru lagi pada directory wise dengan nama `loid-work.com` dan `franky-work.com` kemudian isikan syntax berikut :
 
     ```shell
         # /etc/bind/named.conf.local
@@ -702,12 +707,11 @@ Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https:
         www     IN      CNAME   franky-work.com.
     ```
 
-Setelah selesai konfigurasi tersebut berhasil lakukan copy file dari semua file tersebut dengan `cp /root/named-8.conf.local /etc/bind/named.conf.local` `cp /root/loid-work-8.com /etc/bind/wise/loid-work.com` `cp /root/franky-work-8.com /etc/bind/wise/franky-work.com`. 
+Setelah selesai konfigurasi tersebut berhasil, lakukan copy file dari semua file tersebut dengan `cp /root/named-8.conf.local /etc/bind/named.conf.local`, `cp /root/loid-work-8.com /etc/bind/wise/loid-work.com`, `cp /root/franky-work-8.com /etc/bind/wise/franky-work.com`. 
 
-Kemudian restart bind9 dengan `service bind9 restart`
+Kemudian restart bind9 dengan `service bind9 restart`.
 
-
-**Kemudian pada Node Eden** lakukan konfigurasi dengan install apache2, php, dan libapache2-mod-php7.0 terlebih dahulu dengan perintah berikut. kemudian buat file `apache2-8.conf` , `loid-default-8.conf` , `franky-default-8.conf` . Setelah itu copy semua file dengan `cp /root/apache2-8.conf /etc/apache2/apache2.conf` , `cp /root/loid-default-8.conf /etc/apache2/sites-available/loid-work.com.conf`, ` cp /root/franky-default-8.conf /etc/apache2/sites-available/franky-work.com.conf`
+**Pada Node Eden**, lakukan konfigurasi dengan install apache2, php, dan libapache2-mod-php7.0 terlebih dahulu dengan perintah berikut. Kemudian buat isi file `apache2.conf` , `loid-work.com.conf` , `franky-work.com.conf` dengan copy semua file dengan `cp /root/apache2-8.conf /etc/apache2/apache2.conf` , `cp /root/loid-default-8.conf /etc/apache2/sites-available/loid-work.com.conf`, ` cp /root/franky-default-8.conf /etc/apache2/sites-available/franky-work.com.conf`.
 
 ```shell
    apt-get install apache2 -y
@@ -743,11 +747,11 @@ Kemudian restart bind9 dengan `service bind9 restart`
    </VirtualHost>
 ```  
 
-Setelah konfigurasi tersebut  aktifkan a2ensite dengan perintah `a2ensite loid-work.com` dan  `a2ensite franky-work.com`. 
+Setelah konfigurasi tersebut, aktifkan domain dengan a2ensite dengan perintah `a2ensite loid-work.com` dan  `a2ensite franky-work.com`. 
 
-kemudian buat directory baru dengan `mkdir /var/www/loid-work.com` dan `mkdir /var/www/franky-work.com`.
+Kemudian buat directory baru dengan `mkdir /var/www/loid-work.com` dan `mkdir /var/www/franky-work.com`.
 
-setelah itu masukan konfigurasi syntax dibawah ini:
+Setelah itu masukan konfigurasi syntax dibawah ini:
 
 ```
    # /var/www/loid-work.com/index.php
@@ -761,7 +765,8 @@ setelah itu masukan konfigurasi syntax dibawah ini:
    ?>
 ```
 
-**Pada node Berlint** tambahkan konfigurasi pada file `acl-1.conf`
+**Pada node Berlint**, tambahkan konfigurasi pada file `acl-1.conf`
+
 - acl-1.conf
   
   ```shell
@@ -775,6 +780,7 @@ setelah itu masukan konfigurasi syntax dibawah ini:
 
 
 dan pada file `squid8-9.conf` tambahkan konfigurasi berikut:
+
 - squid8-9.conf
 
   ```shell
@@ -794,15 +800,17 @@ dan pada file `squid8-9.conf` tambahkan konfigurasi berikut:
     http_access allow CERTAIN_DOMAIN WORK_HOUR
   ```
 
+Syntax `http_access allow CERTAIN_DOMAIN WORK_HOUR` akan memperbolehkan domain hanya diakses di jam kerja.
+
 Setelah itu restart apache2 dengan `service apache2 restart`.
 
 Ketika di test pada client dengan `lynx loid-work.com` dan `lynx franky-work.com` akan menghasilkan seperti ini:
 
-- Senin (10.00)
+- Senin (10.00) -> dapat diakses
 
 ![image](https://user-images.githubusercontent.com/67154280/201597262-bd21739a-d446-4372-897e-403cf624cbda.png)
 
-- Senin (20.00) dan Sabtu (10.00)
+- Senin (20.00) dan Sabtu (10.00) -> tidak dapat diakses
 
 ![image](https://user-images.githubusercontent.com/67154280/201597322-528a9d46-26e5-46eb-9109-2a1ab10f9759.png)
 
@@ -813,7 +821,8 @@ Ketika di test pada client dengan `lynx loid-work.com` dan `lynx franky-work.com
 
 ### Penyelesaian 
 
-**Pada node Berlint** buat file `squid10.conf` dengan konfigurasi berikut:
+**Pada node Berlint**, buat file `squid10.conf` dengan konfigurasi berikut:
+
 - squid10.conf
   
   ```shell
@@ -835,17 +844,15 @@ Ketika di test pada client dengan `lynx loid-work.com` dan `lynx franky-work.com
     http_access allow CERTAIN_DOMAIN WORK_HOUR
   ```
 
-copy file dengan `cp /root/squid10.conf /etc/squid/squid.conf` 
+Syntax `http_access deny all` akan memblokir semua pengaksesan dnegan http proxy.
 
-setelah itu restart squid dengan `service squid restart`
+Lalu, copy file dengan `cp /root/squid10.conf /etc/squid/squid.conf` dan restart squid dengan `service squid restart`.
 
 Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan seperti ini:
 
-- Senin (10.00)
+- Senin (10.00), Senin (20.00), dan Sabtu (10.00) -> tidak dapat diakses
 
 ![image](https://user-images.githubusercontent.com/67154280/201597707-f5dcc217-c56e-41b5-b481-054bf0997938.png)
-
-- Senin (20.00) dan Sabtu (10.00)
 
 ![image](https://user-images.githubusercontent.com/67154280/201598216-72f97766-da0e-4f81-a56c-c76afc7e0541.png)
 
@@ -856,7 +863,8 @@ Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan s
 > Setelah diterapkan, ternyata peraturan nomor (11) mengganggu produktifitas saat hari kerja, dengan demikian pembatasan kecepatan hanya diberlakukan untuk pengaksesan internet pada hari libur
 
 ### Penyelesaian
-**Pada node Berlint** buat file `acl-bandwidth-1.conf` dengan konfigurasi syntax berikut:
+**Pada node Berlint**, buat file `acl-bandwidth-1.conf` dengan konfigurasi syntax berikut:
+
 - acl-bandwidth-1.conf
 
   ```shell
@@ -866,9 +874,12 @@ Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan s
     delay_access 1 allow CAN_ACCESS_3
   ```
 
-Kemudian copy file dengan `cp /root/acl-bandwidth-1.conf /etc/squid/acl-bandwidth.conf` .
+Syntax ini akan memberikan limit sebesar 128Kb = 16.000bytes dengan command `delay_parameters 1 16000/16000` dan pembatasan tersebut hanya berlaku pada hari libur dengan command `delay_access 1 allow CAN_ACCESS_3`.
+
+Kemudian copy file dengan `cp /root/acl-bandwidth-1.conf /etc/squid/acl-bandwidth.conf`.
 
 dan kemudian buat file `squid11-12.conf` dengan konfigurasi syntax berikut:
+
 - squid11-12.conf
 
    ```shell
@@ -891,19 +902,20 @@ dan kemudian buat file `squid11-12.conf` dengan konfigurasi syntax berikut:
      http_access deny all
    ```
 
-kemudian copy file dengan `cp /root/squid11-12.conf /etc/squid/squid.conf`.
+Pada konfigurasi ini akan menggunakan `include /etc/squid/acl-bandwidth.conf` sehingga pembatasan bandwidth dapat berlaku.
 
-setelah konfigurasi selesai lakukan restart pada squid dengan `service squid restart`.
+Kemudian copy file dengan `cp /root/squid11-12.conf /etc/squid/squid.conf` dan lakukan restart pada squid dengan `service squid restart`.
 
 Ketika di test pada client dengan `speedtest` akan menghasilkan seperti ini:
 
-- Senin (10.00)
+- Senin (10.00) -> tidak dapat diakses
 
 ![image](https://user-images.githubusercontent.com/67154280/201599463-b0d3b050-1626-404d-94d5-fecfc2ad245a.png)
 
-- Senin (20.00) dan Sabtu (10.00)
+- Senin (20.00) -> dapat diakses, tetapi tidak ada pembatasan
 
 ![image](https://user-images.githubusercontent.com/67154280/201599874-6cc6ed09-9bb0-4eec-b576-96454b7ec792.png)
 
-![image](https://user-images.githubusercontent.com/67154280/201603046-bbcd485c-63de-4cf3-b944-e09a66bc0705.png)
+- Sabtu (10.00) -> dapat diakses, tetapi ada pembatasan
 
+![image](https://user-images.githubusercontent.com/67154280/201603046-bbcd485c-63de-4cf3-b944-e09a66bc0705.png)
