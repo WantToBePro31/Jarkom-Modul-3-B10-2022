@@ -581,28 +581,291 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
 
 ![image](https://user-images.githubusercontent.com/67154280/200377235-889a77bd-8053-4d79-afa1-b0db828351e5.png)
 
+> SSS digunakan sebagai client Proxy agar pertukaran informasi dapat terjamin keamanannya, juga untuk mencegah kebocoran data. Pada Proxy Server di SSS, Loid berencana untuk mengatur bagaimana Client dapat mengakses internet. Artinya setiap client harus menggunakan SSS sebagai HTTP & HTTPS proxy. 
+
+### Note
+    Untuk testing, pada file `.bashrc` setiap node akan dilakukan penginstallan lynx dan speedtest serta mengaktifkan http proxy dengan command
+    ```shell
+       apt-get update
+       apt-get install lynx -y
+       apt install speedtest-cli -y
+       export PYTHONHTTPSVERIFY=0
+       export http_proxy=http://10.8.2.3:8080
+    ```
+    
+> Adapun kriteria pengaturannya adalah sebagai berikut:
 
 ### 8
 > Client hanya dapat mengakses internet diluar (selain) hari & jam kerja (senin-jumat 08.00 - 17.00) dan hari libur (dapat mengakses 24 jam penuh)
 
-### Penyelesaian 
+### Penyelesaian
+
+- acl-1.conf
+  
+  ```shell
+    acl CAN_ACCESS_1 time MTWHF 00:00-07:59
+    acl CAN_ACCESS_2 time MTWHF 17:01-23:59
+    acl CAN_ACCESS_3 time AS 00:00-23:59
+
+    acl WORK_HOUR time MTWHF 08:00-17:00
+  ```
+
+- squid8-9.conf
+  
+  ```shell
+    include /etc/squid/acl.conf
+
+    http_port 8080
+    visible_hostname Berlint
+
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_1
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_2
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_3
+
+    http_access allow CAN_ACCESS_1
+    http_access allow CAN_ACCESS_2
+    http_access allow CAN_ACCESS_3
+  ```
+
+Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https://its.ac.id` akan menghasilkan seperti ini:
+
+- Senin (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201596650-3accc237-a0a4-4dbc-bb78-0702e9518810.png)
+
+- Senin (20.00) dan Sabtu (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201596969-0da0f06c-da91-4995-9eb7-86b2d9f2f5f5.png)
 
 ### 9 
 > Adapun pada hari dan jam kerja sesuai nomor (8), client hanya dapat mengakses domain loid-work.com dan franky-work.com (IP tujuan domain dibebaskan)
 
-### Penyelesaian 
+### Penyelesaian
+
+**Node Wise**
+
+    ```shell
+        # /etc/bind/named.conf.local
+        zone "loid-work.com" {
+            type master;
+            file "/etc/bind/wise/loid-work.com";
+            allow-transfer { 10.8.3.13; };
+        };
+
+        zone "franky-work.com" {
+            type master;
+            file "/etc/bind/wise/franky-work.com";
+            allow-transfer { 10.8.3.13; };
+        };
+
+        # /etc/bind/wise/loid-work.com
+        ;
+        ; BIND data file for local loopback interface
+        ;
+        $TTL    604800
+        @       IN      SOA     loid-work.com. root.loid-work.com. (
+                                2022100601      ; Serial
+                                 604800         ; Refresh
+                                  86400         ; Retry
+                                2419200         ; Expire
+                                 604800 )       ; Negative Cache TTL
+        ;
+        @       IN      NS      loid-work.com.
+        @       IN      A       10.8.3.13
+        www     IN      CNAME   loid-work.com.
+
+        # /etc/bind/wise/franky-work.com
+        ;
+        ; BIND data file for local loopback interface
+        ;
+        $TTL    604800
+        @       IN      SOA     franky-work.com. root.franky-work.com. (
+                                2022100601      ; Serial
+                                 604800         ; Refresh
+                                  86400         ; Retry
+                                2419200         ; Expire
+                                 604800 )       ; Negative Cache TTL
+        ;
+        @       IN      NS      franky-work.com.
+        @       IN      A       10.8.3.13
+        www     IN      CNAME   franky-work.com.
+    ```
+
+**Node Eden**
+
+```shell
+   apt-get install apache2 -y
+   apt-get install php -y
+   apt-get install libapache2-mod-php7.0 -y
+
+   # /etc/apache2/apache2.conf
+   ...
+   ServerName 10.8.3.13
+   
+   # /etc/apache2/sites-available/loid-work.com.conf
+   <VirtualHost *:80>
+        ServerName loid-work.com
+        ServerAlias www.loid-work.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/loid-work.com
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+   </VirtualHost>
+
+   # /etc/apache2/sites-available/franky-work.com.conf
+   <VirtualHost *:80>
+        ServerName franky-work.com
+        ServerAlias www.franky-work.com
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/franky-work.com
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+   </VirtualHost>
+   
+   a2ensite loid-work.com
+   a2ensite franky-work.com
+
+   # /var/www/loid-work.com/index.php
+   <?php
+        echo "Ini domain loid-work";
+   ?>
+   
+   # /var/www/franky-work.com/index.php
+   <?php
+        echo "Ini domain franky-work";
+   ?>
+```
+
+- acl-1.conf
+  
+  ```shell
+    acl CAN_ACCESS_1 time MTWHF 00:00-07:59
+    acl CAN_ACCESS_2 time MTWHF 17:01-23:59
+    acl CAN_ACCESS_3 time AS 00:00-23:59
+
+    acl WORK_HOUR time MTWHF 08:00-17:00
+    acl CERTAIN_DOMAIN dstdomain .loid-work.com .franky-work.com
+  ```
+
+- squid8-9.conf
+
+  ```shell
+    include /etc/squid/acl.conf
+
+    http_port 8080
+    visible_hostname Berlint
+
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_1
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_2
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_3
+    
+    http_access allow CAN_ACCESS_1
+    http_access allow CAN_ACCESS_2
+    http_access allow CAN_ACCESS_3
+    
+    http_access allow CERTAIN_DOMAIN WORK_HOUR
+  ```
+
+Ketika di test pada client dengan `lynx loid-work.com` dan `lynx franky-work.com` akan menghasilkan seperti ini:
+
+- Senin (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201597262-bd21739a-d446-4372-897e-403cf624cbda.png)
+
+- Senin (20.00) dan Sabtu (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201597322-528a9d46-26e5-46eb-9109-2a1ab10f9759.png)
+
+![image](https://user-images.githubusercontent.com/67154280/201598535-b44e8e03-0eb9-4024-80b9-d0c9e83f35ae.png)
 
 ### 10 
 > Saat akses internet dibuka, client dilarang untuk mengakses web tanpa HTTPS. (Contoh web HTTP: http://example.com)
 
 ### Penyelesaian 
 
-### 11
+- squid10.conf
+  
+  ```shell
+    include /etc/squid/acl.conf
+
+    http_port 8080
+    visible_hostname Berlint
+
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_1
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_2
+    http_access deny CERTAIN_DOMAIN CAN_ACCESS_3
+    http_access deny all
+    
+    http_access allow CAN_ACCESS_1
+    http_access allow CAN_ACCESS_2
+    http_access allow CAN_ACCESS_3
+    http_access deny all
+    
+    http_access allow CERTAIN_DOMAIN WORK_HOUR
+  ```
+
+Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan seperti ini:
+
+- Senin (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201597707-f5dcc217-c56e-41b5-b481-054bf0997938.png)
+
+- Senin (20.00) dan Sabtu (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201598216-72f97766-da0e-4f81-a56c-c76afc7e0541.png)
+
+![image](https://user-images.githubusercontent.com/67154280/201598286-5c105af9-7bf8-4003-b536-354c1dd62342.png)
+
+### 11 & 12
 > Agar menghemat penggunaan, akses internet dibatasi dengan kecepatan maksimum 128 Kbps pada setiap host (Kbps = kilobit per second; lakukan pengecekan pada tiap host, ketika 2 host akses internet pada saat bersamaan, keduanya mendapatkan speed maksimal yaitu 128 Kbps)
-
-### Penyelesaian 
-
-### 12
 > Setelah diterapkan, ternyata peraturan nomor (11) mengganggu produktifitas saat hari kerja, dengan demikian pembatasan kecepatan hanya diberlakukan untuk pengaksesan internet pada hari libur
 
-### Penyelesaian 
+### Penyelesaian
+
+- acl-bandwidth-1.conf
+
+  ```shell
+    delay_pools 1
+    delay_class 1 1
+    delay_parameters 1 16000/16000
+    delay_access 1 allow CAN_ACCESS_3
+  ```
+
+- squid11-12.conf
+
+   ```shell
+     include /etc/squid/acl.conf
+     include /etc/squid/acl-bandwidth.conf
+     
+     http_port 8080
+     visible_hostname Berlint
+
+     http_access deny CERTAIN_DOMAIN CAN_ACCESS_1
+     http_access deny CERTAIN_DOMAIN CAN_ACCESS_2
+     http_access deny CERTAIN_DOMAIN CAN_ACCESS_3
+    
+     http_access allow CAN_ACCESS_1
+     http_access allow CAN_ACCESS_2
+     http_access allow CAN_ACCESS_3
+    
+     http_access allow CERTAIN_DOMAIN WORK_HOUR
+     
+     http_access deny all
+   ```
+
+Ketika di test pada client dengan `speedtest` akan menghasilkan seperti ini:
+
+- Senin (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201599463-b0d3b050-1626-404d-94d5-fecfc2ad245a.png)
+
+- Senin (20.00) dan Sabtu (10.00)
+
+![image](https://user-images.githubusercontent.com/67154280/201599874-6cc6ed09-9bb0-4eec-b576-96454b7ec792.png)
+
+![image](https://user-images.githubusercontent.com/67154280/201603046-bbcd485c-63de-4cf3-b944-e09a66bc0705.png)
+
