@@ -600,6 +600,9 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
 
 ### Penyelesaian
 
+#Penambahan ACL Waktu 
+**Pada node Wise** buat file acl-1.conf
+
 - acl-1.conf
   
   ```shell
