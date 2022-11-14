@@ -600,9 +600,8 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
 
 ### Penyelesaian
 
-#Penambahan ACL Waktu 
-**Pada node Wise** buat file acl-1.conf
-
+**Penambahan ACL Waktu**
+**Pada node Berlint** buat file `acl-1.conf` dan isikan potongan teks berikut:
 - acl-1.conf
   
   ```shell
@@ -612,7 +611,10 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
 
     acl WORK_HOUR time MTWHF 08:00-17:00
   ```
-
+  
+kemudian copy file `acl-1.conf` dengan perintah `cp /root/acl-1.conf /etc/squid/acl.conf`
+**Konfigurasi Akses Berdasarkan ACL Waktu**
+buat file `squid8-9.conf` dan isikan potongan teks berikut:
 - squid8-9.conf
   
   ```shell
@@ -629,8 +631,10 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
     http_access allow CAN_ACCESS_2
     http_access allow CAN_ACCESS_3
   ```
-
-Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https://its.ac.id` akan menghasilkan seperti ini:
+pada syntax tersebut menjelaskan bahwa `http_access allow all` Memperbolehkan semuanya untuk mengakses proxy via http. Pengaturan ini perlu ditambahkan karena pengaturan default squid adalah deny.
+kemudian copy file `squid8-9.conf` dengan perintah `cp /root/squid8-9.conf /etc/squid/squid.conf` 
+setelah semua perintah dijalankan lakukan restart service squid dengan `service squid restart`
+Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https://its.ac.id` akan menghasilkan seperti ini:
 
 - Senin (10.00)
 
