@@ -636,6 +636,8 @@ pada syntax tersebut menjelaskan bahwa `http_access allow all` Memperbolehkan se
 
 kemudian copy file `squid8-9.conf` dengan perintah `cp /root/squid8-9.conf /etc/squid/squid.conf` 
 setelah semua perintah dijalankan lakukan restart service squid dengan `service squid restart`
+
+
 Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https://its.ac.id` akan menghasilkan seperti ini:
 
 - Senin (10.00)
