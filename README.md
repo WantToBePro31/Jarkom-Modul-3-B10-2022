@@ -651,7 +651,7 @@ Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https:
 
 ### Penyelesaian
 
-**Pada Node Wise** buat file `named-8.conf.local` kemudian buat directory baru dengan perintah `mkdir /etc/bind/wise` dan buat file baru lagi pada directory wise dengan `loid-work-8.com`franky-work-8.com` , dan ` dan isikan syntax berikut :
+**Pada Node Wise** buat file `named-8.conf.local` kemudian buat directory baru dengan perintah `mkdir /etc/bind/wise` dan buat file baru lagi pada directory wise dengan `loid-work-8.com` `franky-work-8.com` kemudian isikan syntax berikut :
 
     ```shell
         # /etc/bind/named.conf.local
@@ -705,7 +705,7 @@ Setelah selesai konfigurasi tersebut berhasil lakukan copy file dari semua file 
 Kemudian restart bind9 dengan `service bind9 restart`
 
 
-**Kemudian pada Node Eden** lakukan konfigurasi dengan install apache2, php, dan libapache2-mod-php7.0 dengan perintah berikut:
+**Kemudian pada Node Eden** lakukan konfigurasi dengan install apache2, php, dan libapache2-mod-php7.0 terlebih dahulu dengan perintah berikut. kemudian buat file `apache2-8.conf` , `loid-default-8.conf` , `franky-default-8.conf` . Setelah itu copy semua file dengan `cp /root/apache2-8.conf /etc/apache2/apache2.conf` , `cp /root/loid-default-8.conf /etc/apache2/sites-available/loid-work.com.conf`, ` cp /root/franky-default-8.conf /etc/apache2/sites-available/franky-work.com.conf`
 
 ```shell
    apt-get install apache2 -y
@@ -739,10 +739,15 @@ Kemudian restart bind9 dengan `service bind9 restart`
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
    </VirtualHost>
-   
-   a2ensite loid-work.com
-   a2ensite franky-work.com
+```  
 
+Setelah konfigurasi tersebut  aktifkan a2ensite dengan perintah `a2ensite loid-work.com` dan  `a2ensite franky-work.com`. 
+
+kemudian buat directory baru dengan `mkdir /var/www/loid-work.com` dan `mkdir /var/www/franky-work.com`.
+
+setelah itu masukan konfigurasi syntax dibawah ini:
+
+```
    # /var/www/loid-work.com/index.php
    <?php
         echo "Ini domain loid-work";
@@ -754,6 +759,7 @@ Kemudian restart bind9 dengan `service bind9 restart`
    ?>
 ```
 
+**Pada node Berlint** tambahkan konfigurasi pada file `acl-1.conf`
 - acl-1.conf
   
   ```shell
@@ -765,6 +771,8 @@ Kemudian restart bind9 dengan `service bind9 restart`
     acl CERTAIN_DOMAIN dstdomain .loid-work.com .franky-work.com
   ```
 
+
+dan pada file `squid8-9.conf` tambahkan konfigurasi berikut:
 - squid8-9.conf
 
   ```shell
@@ -784,6 +792,8 @@ Kemudian restart bind9 dengan `service bind9 restart`
     http_access allow CERTAIN_DOMAIN WORK_HOUR
   ```
 
+Setelah itu restart apache2 dengan `service apache2 restart`.
+
 Ketika di test pada client dengan `lynx loid-work.com` dan `lynx franky-work.com` akan menghasilkan seperti ini:
 
 - Senin (10.00)
@@ -801,6 +811,7 @@ Ketika di test pada client dengan `lynx loid-work.com` dan `lynx franky-work.com
 
 ### Penyelesaian 
 
+**Pada node Berlint** buat file `squid10.conf` dengan konfigurasi berikut:
 - squid10.conf
   
   ```shell
@@ -822,6 +833,10 @@ Ketika di test pada client dengan `lynx loid-work.com` dan `lynx franky-work.com
     http_access allow CERTAIN_DOMAIN WORK_HOUR
   ```
 
+copy file dengan `cp /root/squid10.conf /etc/squid/squid.conf` 
+
+setelah itu restart squid dengan `service squid restart`
+
 Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan seperti ini:
 
 - Senin (10.00)
@@ -839,7 +854,7 @@ Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan s
 > Setelah diterapkan, ternyata peraturan nomor (11) mengganggu produktifitas saat hari kerja, dengan demikian pembatasan kecepatan hanya diberlakukan untuk pengaksesan internet pada hari libur
 
 ### Penyelesaian
-
+**Pada node Berlint** buat file `acl-bandwidth-1.conf` dengan konfigurasi syntax berikut:
 - acl-bandwidth-1.conf
 
   ```shell
@@ -849,6 +864,9 @@ Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan s
     delay_access 1 allow CAN_ACCESS_3
   ```
 
+Kemudian copy file dengan `cp /root/acl-bandwidth-1.conf /etc/squid/acl-bandwidth.conf` .
+
+dan kemudian buat file `squid11-12.conf` dengan konfigurasi syntax berikut:
 - squid11-12.conf
 
    ```shell
@@ -871,6 +889,9 @@ Ketika di test pada client dengan  `lynx http://example.com` akan menghasilkan s
      http_access deny all
    ```
 
+kemudian copy file dengan `cp /root/squid11-12.conf /etc/squid/squid.conf`.
+
+setelah konfigurasi selesai lakukan restart pada squid dengan `service squid restart`.
 Ketika di test pada client dengan `speedtest` akan menghasilkan seperti ini:
 
 - Senin (10.00)
