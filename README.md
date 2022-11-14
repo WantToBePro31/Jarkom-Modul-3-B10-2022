@@ -612,8 +612,9 @@ Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0
     acl WORK_HOUR time MTWHF 08:00-17:00
   ```
   
-kemudian copy file `acl-1.conf` dengan perintah `cp /root/acl-1.conf /etc/squid/acl.conf`
+kemudian copy file `acl-1.conf` dengan perintah `cp /root/acl-1.conf /etc/squid/acl.conf` dan lakukan
 **Konfigurasi Akses Berdasarkan ACL Waktu**
+
 buat file `squid8-9.conf` dan isikan potongan teks berikut:
 - squid8-9.conf
   
