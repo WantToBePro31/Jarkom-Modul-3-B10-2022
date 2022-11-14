@@ -894,6 +894,7 @@ dan kemudian buat file `squid11-12.conf` dengan konfigurasi syntax berikut:
 kemudian copy file dengan `cp /root/squid11-12.conf /etc/squid/squid.conf`.
 
 setelah konfigurasi selesai lakukan restart pada squid dengan `service squid restart`.
+
 Ketika di test pada client dengan `speedtest` akan menghasilkan seperti ini:
 
 - Senin (10.00)
