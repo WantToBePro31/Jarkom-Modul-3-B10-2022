@@ -580,3 +580,29 @@ service isc-dhcp-server restart
 Hal itu menyebabkan IP fixed address pada node Eden yang memiliki interface eth0 berubah menjadi `10.8.3.13/24`
 
 ![image](https://user-images.githubusercontent.com/67154280/200377235-889a77bd-8053-4d79-afa1-b0db828351e5.png)
+
+
+### 8
+> Client hanya dapat mengakses internet diluar (selain) hari & jam kerja (senin-jumat 08.00 - 17.00) dan hari libur (dapat mengakses 24 jam penuh)
+
+### Penyelesaian 
+
+### 9 
+> Adapun pada hari dan jam kerja sesuai nomor (8), client hanya dapat mengakses domain loid-work.com dan franky-work.com (IP tujuan domain dibebaskan)
+
+### Penyelesaian 
+
+### 10 
+> Saat akses internet dibuka, client dilarang untuk mengakses web tanpa HTTPS. (Contoh web HTTP: http://example.com)
+
+### Penyelesaian 
+
+### 11
+> Agar menghemat penggunaan, akses internet dibatasi dengan kecepatan maksimum 128 Kbps pada setiap host (Kbps = kilobit per second; lakukan pengecekan pada tiap host, ketika 2 host akses internet pada saat bersamaan, keduanya mendapatkan speed maksimal yaitu 128 Kbps)
+
+### Penyelesaian 
+
+### 12
+> Setelah diterapkan, ternyata peraturan nomor (11) mengganggu produktifitas saat hari kerja, dengan demikian pembatasan kecepatan hanya diberlakukan untuk pengaksesan internet pada hari libur
+
+### Penyelesaian 
