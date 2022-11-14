@@ -633,6 +633,7 @@ buat file `squid8-9.conf` dan isikan potongan teks berikut:
     http_access allow CAN_ACCESS_3
   ```
 pada syntax tersebut menjelaskan bahwa `http_access allow all` Memperbolehkan semuanya untuk mengakses proxy via http. Pengaturan ini perlu ditambahkan karena pengaturan default squid adalah deny.
+
 kemudian copy file `squid8-9.conf` dengan perintah `cp /root/squid8-9.conf /etc/squid/squid.conf` 
 setelah semua perintah dijalankan lakukan restart service squid dengan `service squid restart`
 Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https://its.ac.id` akan menghasilkan seperti ini:
@@ -650,7 +651,7 @@ Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https:
 
 ### Penyelesaian
 
-**Node Wise**
+**Pada Node Wise** buat file `named-8.conf.local` kemudian buat directory baru dengan perintah `mkdir /etc/bind/wise` dan buat file baru lagi pada directory wise dengan `loid-work-8.com`franky-work-8.com` , dan ` dan isikan syntax berikut :
 
     ```shell
         # /etc/bind/named.conf.local
@@ -699,7 +700,12 @@ Maka, Ketika di test pada client dengan `lynx http://its.ac.id` dan `lynx https:
         www     IN      CNAME   franky-work.com.
     ```
 
-**Node Eden**
+Setelah selesai konfigurasi tersebut berhasil lakukan copy file dari semua file tersebut dengan `cp /root/named-8.conf.local /etc/bind/named.conf.local` `cp /root/loid-work-8.com /etc/bind/wise/loid-work.com` `cp /root/franky-work-8.com /etc/bind/wise/franky-work.com`. 
+
+Kemudian restart bind9 dengan `service bind9 restart`
+
+
+**Kemudian pada Node Eden** lakukan konfigurasi dengan install apache2, php, dan libapache2-mod-php7.0 dengan perintah berikut:
 
 ```shell
    apt-get install apache2 -y
