@@ -919,3 +919,7 @@ Ketika di test pada client dengan `speedtest` akan menghasilkan seperti ini:
 - Sabtu (10.00) -> dapat diakses, tetapi ada pembatasan
 
 ![image](https://user-images.githubusercontent.com/67154280/201603046-bbcd485c-63de-4cf3-b944-e09a66bc0705.png)
+
+## Kendala
+
+- HTTPS tetap selalu bisa diakses sehingga sulit pada konfigurasi total
